@@ -4,22 +4,6 @@
 #
 # timelog [--user USERNAME] [[--date d] [--hours] hrs] project
 #
-# Examples:
-#
-# $ timelog 4.5 Button
-# $ timelog -u Bill -h 6 Piquet
-# $ timelog --date 26-aug-08 --hours 2 Piquet
-# $ timelog Hill
-# jun-08    15.0
-# jul-08   128.5
-# aug-08   117.0
-# Total    260.0
-# $ timelog -u Harriet Hill
-# jun-08    15.0
-# jul-08    76.0
-# aug-08    17.5
-# Total    108.5
-#
 
 require 'ostruct'
 require 'optparse'
@@ -66,12 +50,12 @@ def parse_options(argv)
   options
 end
 
-LOG_FOLDER = ENV['TL_DIR'] || '/var/log/timelog'
-LOG_FILE_NAME = 'log.txt'
-LOG_FILE = LOG_FOLDER + '/' + LOG_FILE_NAME
+TIMELOG_FOLDER = ENV['TL_DIR'] || '/var/log/timelog'
+TIMELOG_FILE_NAME = 'timelog.txt'
+TIMELOG_FILE = TIMELOG_FOLDER + '/' + TIMELOG_FILE_NAME
 
 def report(options)
-  records = IO.readlines(LOG_FILE)
+  records = IO.readlines(TIMELOG_FILE)
   records = records.grep(/^#{options.project},/)
   records = records.grep(/,#{options.user},/) if options.user
   months = Hash.new(0.0)
@@ -92,7 +76,7 @@ end
 def log(options)
   options.user ||= ENV['USERNAME']
   options.date ||= Date.today.to_s
-  File.open LOG_FILE, 'a+' do |f|
+  File.open TIMELOG_FILE, 'a+' do |f|
     f.puts "#{options.project},#{options.user},#{options.date},#{options.hours}"
   end
 end
