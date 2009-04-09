@@ -4,97 +4,103 @@ require 'timer'
 class TimerTest < Test::Unit::TestCase
   include Timer
 
-  def test_missing_interval
+  def test_values_decoded
+    interval, time, departure = times 'interval'=>"3", 'duration' => "12", 'departure' => "6"
+    assert_equal 3, interval
+    assert_equal 12, time
+    assert_equal 6, departure
+  end
+
+  def test_missing_interval_raises_runtime_error
     assert_raise RuntimeError do
-      get_times 'duration' => "12", 'departure' => "5"
+      times 'duration' => "12", 'departure' => "5"
     end
   end
 
-  def test_non_integer_interval
+  def test_non_integer_interval_raises_argument_error
     assert_raise ArgumentError do
-      get_times 'interval' => "fred", 'duration' => "12", 'departure' => "5"
+      times 'interval' => "fred", 'duration' => "12", 'departure' => "5"
     end
     assert_raise ArgumentError do
-      get_times 'interval' => "fred 3", 'duration' => "12", 'departure' => "5"
+      times 'interval' => "fred 3", 'duration' => "12", 'departure' => "5"
     end
     assert_raise ArgumentError do
-      get_times 'interval' => "3 fred 3", 'duration' => "12", 'departure' => "5"
+      times 'interval' => "3 fred 3", 'duration' => "12", 'departure' => "5"
     end
   end
 
-  def test_non_positive_interval
+  def test_non_positive_interval_raises_runtime_error
     assert_raise RuntimeError do
-      get_times 'interval' => "0", 'duration' => "12", 'departure' => "5"
+      times 'interval' => "0", 'duration' => "12", 'departure' => "5"
     end
     assert_raise RuntimeError do
-      get_times 'interval' => "-24", 'duration' => "12", 'departure' => "5"
+      times 'interval' => "-24", 'duration' => "12", 'departure' => "5"
     end
   end
 
-  def test_missing_duration
+  def test_missing_duration_raises_runtime_error
     assert_raise RuntimeError do
-      get_times 'interval' => "12", 'departure' => "5"
+      times 'interval' => "12", 'departure' => "5"
     end
   end
 
-  def test_non_integer_duration
+  def test_non_integer_duration_raises_argument_error
     assert_raise ArgumentError do
-      get_times 'interval' => "3", 'duration' => "sally", 'departure' => "5"
-    end
-    assert_raise ArgumentError do
-      get_times 'interval' => "3", 'duration' => "sally 12", 'departure' => "5"
+      times 'interval' => "3", 'duration' => "sally", 'departure' => "5"
     end
     assert_raise ArgumentError do
-      get_times 'interval' => "3", 'duration' => "12sally", 'departure' => "5"
-    end
-  end
-
-  def test_non_positive_duration
-    assert_raise RuntimeError do
-      get_times 'interval' => "3", 'duration' => "0", 'departure' => "5"
-    end
-    assert_raise RuntimeError do
-      get_times 'interval' => "3", 'duration' => "-33", 'departure' => "5"
-    end
-  end
-
-	def test_duration_not_a_multiple_of_interval
-    assert_raise RuntimeError do
-      get_times 'interval' => "27", 'duration' => "12", 'departure' => "5"
-    end
-	end
-
-  def test_missing_departure
-    assert_raise RuntimeError do
-      get_times 'interval' => "3", 'duration' => "15"
-    end
-  end
-
-  def test_non_integer_departure
-    assert_raise ArgumentError do
-      get_times 'interval' => "3", 'duration' => "12", 'departure' => "five"
+      times 'interval' => "3", 'duration' => "sally 12", 'departure' => "5"
     end
     assert_raise ArgumentError do
-      get_times 'interval' => "3", 'duration' => "12", 'departure' => "five5"
+      times 'interval' => "3", 'duration' => "12sally", 'departure' => "5"
+    end
+  end
+
+  def test_non_positive_duration_raises_runtime_error
+    assert_raise RuntimeError do
+      times 'interval' => "3", 'duration' => "0", 'departure' => "5"
+    end
+    assert_raise RuntimeError do
+      times 'interval' => "3", 'duration' => "-33", 'departure' => "5"
+    end
+  end
+
+  def test_duration_not_a_multiple_of_interval_raises_runtime_error
+    assert_raise RuntimeError do
+      times 'interval' => "27", 'duration' => "12", 'departure' => "5"
+    end
+  end
+
+  def test_missing_departure_raises_runtime_error
+    assert_raise RuntimeError do
+      times 'interval' => "3", 'duration' => "15"
+    end
+  end
+
+  def test_non_integer_departure_raises_argument_error
+    assert_raise ArgumentError do
+      times 'interval' => "3", 'duration' => "12", 'departure' => "five"
     end
     assert_raise ArgumentError do
-      get_times 'interval' => "3", 'duration' => "12", 'departure' => "5five"
+      times 'interval' => "3", 'duration' => "12", 'departure' => "five5"
+    end
+    assert_raise ArgumentError do
+      times 'interval' => "3", 'duration' => "12", 'departure' => "5five"
     end
   end
 
-  def test_non_positive_departure
+  def test_non_positive_departure_raises_runtime_error
     assert_raise RuntimeError do
-      get_times 'interval' => "3", 'duration' => "15", 'departure' => "0"
+      times 'interval' => "3", 'duration' => "15", 'departure' => "0"
     end
     assert_raise RuntimeError do
-      get_times 'interval' => "3", 'duration' => "33", 'departure' => "-15"
+      times 'interval' => "3", 'duration' => "33", 'departure' => "-15"
     end
   end
 
-	def test_departure_not_a_multiple_of_interval
+  def test_departure_not_a_multiple_of_interval_raises_runtime_error
     assert_raise RuntimeError do
-      get_times 'interval' => "3", 'duration' => "12", 'departure' => "5"
+      times 'interval' => "3", 'duration' => "12", 'departure' => "5"
     end
-	end
-
+  end
 end

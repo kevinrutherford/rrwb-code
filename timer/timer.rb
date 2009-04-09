@@ -1,5 +1,5 @@
 module Timer
-  def get_times(env)
+  def times(env)
     value_s = env['interval']
     if value_s == nil
       raise "interval missing"

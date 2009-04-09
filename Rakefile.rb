@@ -2,8 +2,6 @@ require 'rake/testtask'
 require 'reek/rake_task'
 require 'spec/rake/spectask'
 
-DIRS = %w{answers array_queue checkpoint csv_writer matcher person robot simple_queue template theater tic_tac_toe timelog timer}
-
 desc 'run the ucalc specs'
 task :ucalc do
   Dir.chdir('ucalc') { sh 'spec *_spec.rb' }
@@ -14,7 +12,7 @@ Reek::RakeTask.new do |t|
 end
 
 Rake::TestTask.new do |t|
-  t.libs = DIRS
+  t.libs = Dir['*']
   t.test_files = '**/*_test.rb'
 end
 
